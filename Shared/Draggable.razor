@@ -1,0 +1,23 @@
+﻿@using EsmaulHusna.Logic
+@typeparam T
+@inject DragAndDropController DragAndDropController
+
+<div draggable="true" @ondragstart="OnDragStart">
+         @ChildContent
+     </div>
+
+     @functions {
+         [Parameter]
+         public RenderFragment ChildContent { get; set; }
+
+         [Parameter]
+         public string Zone { get; set; }
+
+         [Parameter]
+         public T Data { get; set; }
+
+         public void OnDragStart()
+         {
+             DragAndDropController.StartDrag(Data, Zone);
+         }
+     }

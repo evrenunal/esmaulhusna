@@ -1,0 +1,26 @@
+﻿@using EsmaulHusna.Logic
+@inject DragAndDropController DragAndDropController
+@typeparam T
+
+<div ondragover="event.preventDefault()" @ondrop="OnDrop">
+    @ChildContent
+</div>
+
+@functions {
+    [Parameter]
+    public RenderFragment ChildContent { get; set; }
+
+    [Parameter]
+    public string Zone { get; set; }
+
+    [Parameter]
+    public Action<T> Drop { get; set; }
+
+    void OnDrop()
+    {
+        if (Drop != null && DragAndDropController.Accepts(Zone))
+        {
+            Drop((T)DragAndDropController.Data);
+        }
+    }
+}
