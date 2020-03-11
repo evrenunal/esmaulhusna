@@ -1,8 +1,64 @@
 ﻿@page "/"
+@using EsmaulHusna.Model
+@inject HttpClient Http
 
 <h1>Esmaul Husna Memorization Application</h1>
 
 
+<MatButton>Test</MatButton>
+
+
+@if (pageItems == null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+
+    @foreach (var nameItem in pageItems)
+    {
+        <p>1</p>
+        @*<Draggable Data="@nameItem" Zone="DropZone">
+            <div class="draggable">
+                Draggable A
+            </div>
+        </Draggable>*@
+    }
+
+}
+
 <div>
-    
+    <MatPaginator Length="@itemCount" PageSize="@pageSize" Page="@OnPage"></MatPaginator>
 </div>
+
+@code
+{
+
+    int itemCount = 0;
+    int pageSize = 10;
+   public NameItem[] allItems;
+    public NameItem[] pageItems;
+    
+
+    void OnPage(MatPaginatorPageEvent e)
+    {
+        pageSize = e.PageSize;
+        pageItems = allItems.Skip(e.PageIndex-1 * e.PageSize).Take(e.PageSize).ToArray();
+        
+        StateHasChanged();
+    }
+
+
+    protected override async Task OnInitializedAsync()
+    {
+        allItems = await Http.GetJsonAsync<NameItem[]>("data/esmaulhusna-en.json");
+        itemCount = allItems.Length;
+        pageItems = allItems.Take(pageSize).ToArray();
+
+        StateHasChanged();
+    }
+
+   
+
+}
+@*<SurveyPrompt Title="How is Blazor working for you?" />*@
