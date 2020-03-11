@@ -4,8 +4,9 @@
 
 <h1>Esmaul Husna Memorization Application</h1>
 
-
-<MatButton>Test</MatButton>
+<div>
+    <MatPaginator Length="@itemCount" PageSize="@pageSize" Page="@OnPage"></MatPaginator>
+</div>
 
 
 @if (pageItems == null)
@@ -15,37 +16,44 @@
 else
 {
 
-    @foreach (var nameItem in pageItems)
+    @foreach (var item in pageItems.Zip(shuffled, (ord, shfld) => (ord, shfld)))
     {
-        <p>1</p>
-        @*<Draggable Data="@nameItem" Zone="DropZone">
+        <Draggable Data="@item.shfld" Zone="DropZone">
             <div class="draggable">
-                Draggable A
+                @item.shfld.original
             </div>
-        </Draggable>*@
+        </Draggable>
+        <DropTarget T="NameItem" Zone="DropZone" Drop="@OnDrop">
+            <div class="drop-target">
+               @item.ord.meaning
+            </div>
+        </DropTarget>
+
     }
 
 }
 
-<div>
-    <MatPaginator Length="@itemCount" PageSize="@pageSize" Page="@OnPage"></MatPaginator>
-</div>
 
 @code
 {
 
     int itemCount = 0;
     int pageSize = 10;
-   public NameItem[] allItems;
+    public NameItem[] allItems;
     public NameItem[] pageItems;
-    
+    public NameItem[] shuffled;
 
+    void OnDrop(NameItem data)
+    {
+       
+
+    // Important: Invoke StateHasChanged() to update the page
+        StateHasChanged();
+    }
     void OnPage(MatPaginatorPageEvent e)
     {
         pageSize = e.PageSize;
-        pageItems = allItems.Skip(e.PageIndex-1 * e.PageSize).Take(e.PageSize).ToArray();
-        
-        StateHasChanged();
+        pageItems = allItems.Skip(e.PageIndex * e.PageSize).Take(e.PageSize).ToArray();
     }
 
 
@@ -55,10 +63,20 @@ else
         itemCount = allItems.Length;
         pageItems = allItems.Take(pageSize).ToArray();
 
-        StateHasChanged();
+        shuffled = Shuffle(pageItems);
+
     }
 
-   
+    private NameItem[] Shuffle(NameItem[] nameItems)
+    {
+        var rnd1 = new Func<Random>(() =>
+        {
+            return new Random((int)(DateTime.Now.Ticks % int.MaxValue));
+        });
+        var rnums = Enumerable.Repeat(1, nameItems.Length).Select(_ => rnd1().Next());
+
+        return nameItems.Zip(rnums, (nm, nu) => (nm, nu)).OrderBy(s => s.nu).Select(s => s.nm).ToArray();
+    }
 
 }
 @*<SurveyPrompt Title="How is Blazor working for you?" />*@
