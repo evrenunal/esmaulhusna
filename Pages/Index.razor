@@ -19,21 +19,20 @@ else
     <div class="mat-layout-grid">
         <div class="mat-layout-grid-inner">
             <div class="mat-layout-grid-cell mat-layout-grid-cell-span-6">
-                <MatList  SingleSelection="true" TwoLine="true">
+               
                     @foreach (var item in _pageModel.PageItems.OrderBy(p=>p.TargetIndex))
                     {
                         <Draggable Data="@item" Zone="DropZone">
                             <div class="draggable">
-                                <MatListItem>
-                                    <MatListItemText>
-                                        <MatListItemPrimaryText>@item.NameItem.original</MatListItemPrimaryText>
-                                        <MatListItemSecondaryText>@item.NameItem.meaning</MatListItemSecondaryText>
-                                    </MatListItemText>
-                                </MatListItem>
+                                
+                                <p>@item.NameItem.original</p>   <br/>
+                                <p>@item.NameItem.meaning</p>
+                                   
+                               
                             </div>
                         </Draggable>
                     }
-                </MatList>
+            
             </div>
             <div class="mat-layout-grid-cell mat-layout-grid-cell-span-6">
                 <MatList  SingleSelection="true" TwoLine="true">
