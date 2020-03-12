@@ -19,26 +19,34 @@ else
     <div class="mat-layout-grid">
         <div class="mat-layout-grid-inner">
             <div class="mat-layout-grid-cell mat-layout-grid-cell-span-6">
-               
-                    @foreach (var item in _pageModel.PageItems.OrderBy(p=>p.TargetIndex))
+
+                @foreach (var item in pageModel.PageItems.OrderBy(p => p.TargetIndex))
+                {
+                    if (!item.Found)
                     {
-                        <Draggable Data="@item" Zone="DropZone">
+                        <Draggable Data="@item" Zone="@item.Index.ToString()">
                             <div class="draggable">
-                                
-                                <p>@item.NameItem.original</p>   <br/>
+                                <p>@item.NameItem.original</p>
                                 <p>@item.NameItem.meaning</p>
-                                   
-                               
                             </div>
                         </Draggable>
                     }
-            
+                    else
+                    {
+                        <div class="">
+                            <p>@item.NameItem.original</p>
+                            <p>@item.NameItem.meaning</p>
+                        </div>
+                    }
+
+                }
+
             </div>
             <div class="mat-layout-grid-cell mat-layout-grid-cell-span-6">
                 <MatList  SingleSelection="true" TwoLine="true">
-                    @foreach (var item in _pageModel.PageItems.OrderBy(p=>p.Index))
+                    @foreach (var item in pageModel.PageItems.OrderBy(p=>p.Index))
                     {
-                        <DropTarget T="PageItem" Zone="DropZone" Drop="@OnDrop">
+                        <DropTarget T="PageItem" Zone="@item.Index.ToString()" Drop="@OnDrop">
                             <div class="drop-target">
 
                                 @if (item.Found)
@@ -78,10 +86,11 @@ else
     int pageSize = 10;
     private NameItem[] allItems;
     private NameItem[] currentNames;
-    private PageModel _pageModel;
+    private PageModel pageModel;
 
     void OnDrop(PageItem data)
     {
+        data.Found = true;
 
         // Important: Invoke StateHasChanged() to update the page
         StateHasChanged();
@@ -113,7 +122,7 @@ else
             Index = i + 1,
             TargetIndex = randoms[i]
         }).ToArray();
-        _pageModel = new PageModel
+        pageModel = new PageModel
         {
             PageItems = pageItem1
         };
