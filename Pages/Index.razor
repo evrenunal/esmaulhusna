@@ -9,28 +9,66 @@
 </div>
 
 
-@if (pageItems == null)
+@if (currentNames == null)
 {
     <p><em>Loading...</em></p>
 }
 else
 {
 
-    @foreach (var item in pageItems.Zip(shuffled, (ord, shfld) => (ord, shfld)))
-    {
-        <Draggable Data="@item.shfld" Zone="DropZone">
-            <div class="draggable">
-                @item.shfld.original
+    <div class="mat-layout-grid">
+        <div class="mat-layout-grid-inner">
+            <div class="mat-layout-grid-cell mat-layout-grid-cell-span-6">
+                <MatList  SingleSelection="true" TwoLine="true">
+                    @foreach (var item in _pageModel.PageItems.OrderBy(p=>p.TargetIndex))
+                    {
+                        <Draggable Data="@item" Zone="DropZone">
+                            <div class="draggable">
+                                <MatListItem>
+                                    <MatListItemText>
+                                        <MatListItemPrimaryText>@item.NameItem.original</MatListItemPrimaryText>
+                                        <MatListItemSecondaryText>@item.NameItem.meaning</MatListItemSecondaryText>
+                                    </MatListItemText>
+                                </MatListItem>
+                            </div>
+                        </Draggable>
+                    }
+                </MatList>
             </div>
-        </Draggable>
-        <DropTarget T="NameItem" Zone="DropZone" Drop="@OnDrop">
-            <div class="drop-target">
-               @item.ord.meaning
+            <div class="mat-layout-grid-cell mat-layout-grid-cell-span-6">
+                <MatList  SingleSelection="true" TwoLine="true">
+                    @foreach (var item in _pageModel.PageItems.OrderBy(p=>p.Index))
+                    {
+                        <DropTarget T="PageItem" Zone="DropZone" Drop="@OnDrop">
+                            <div class="drop-target">
+
+                                @if (item.Found)
+                                {
+                                    <MatListItem>
+                                        <MatListItemText>
+                                            <MatListItemPrimaryText>@item.NameItem.original</MatListItemPrimaryText>
+                                            <MatListItemSecondaryText>@item.NameItem.meaning</MatListItemSecondaryText>
+                                        </MatListItemText>
+                                    </MatListItem>
+                                }
+                                else
+                                {
+                                    <MatListItem>
+                                        <MatListItemText>
+                                            <MatListItemPrimaryText>???????????</MatListItemPrimaryText>
+                                            <MatListItemSecondaryText>???????????</MatListItemSecondaryText>
+                                        </MatListItemText>
+                                    </MatListItem>
+                                }
+
+                            </div>
+                        </DropTarget>
+                    }
+                </MatList>
             </div>
-        </DropTarget>
-
-    }
-
+        </div>
+    </div>
+  
 }
 
 
@@ -39,21 +77,21 @@ else
 
     int itemCount = 0;
     int pageSize = 10;
-    public NameItem[] allItems;
-    public NameItem[] pageItems;
-    public NameItem[] shuffled;
+    private NameItem[] allItems;
+    private NameItem[] currentNames;
+    private PageModel _pageModel;
 
-    void OnDrop(NameItem data)
+    void OnDrop(PageItem data)
     {
-       
 
-    // Important: Invoke StateHasChanged() to update the page
+        // Important: Invoke StateHasChanged() to update the page
         StateHasChanged();
     }
     void OnPage(MatPaginatorPageEvent e)
     {
         pageSize = e.PageSize;
-        pageItems = allItems.Skip(e.PageIndex * e.PageSize).Take(e.PageSize).ToArray();
+        currentNames = allItems.Skip(e.PageIndex * e.PageSize).Take(e.PageSize).ToArray();
+        CreatePageItems();
     }
 
 
@@ -61,10 +99,41 @@ else
     {
         allItems = await Http.GetJsonAsync<NameItem[]>("data/esmaulhusna-en.json");
         itemCount = allItems.Length;
-        pageItems = allItems.Take(pageSize).ToArray();
+        currentNames = allItems.Take(pageSize).ToArray();
 
-        shuffled = Shuffle(pageItems);
+        CreatePageItems();
+    }
 
+    private void CreatePageItems()
+    {
+        int[] randoms = GetRandoms(currentNames.Length);
+        PageItem[] pageItem1 = currentNames.Select((cn, i) => new PageItem
+        {
+            NameItem = cn,
+            Found = false,
+            Index = i + 1,
+            TargetIndex = randoms[i]
+        }).ToArray();
+        _pageModel = new PageModel
+        {
+            PageItems = pageItem1
+        };
+    }
+
+    private int[] GetRandoms(int length)
+    {
+        var rfn = new Func<Random>(() => new Random((int)(DateTime.Now.Ticks % int.MaxValue)));
+
+        var lst = new List<int>();
+
+
+        while (lst.Count < length)
+        {
+            var rnd = rfn().Next();
+            if (lst.Contains(rnd)) continue;
+            lst.Add(rnd);
+        }
+        return lst.ToArray();
     }
 
     private NameItem[] Shuffle(NameItem[] nameItems)
@@ -75,7 +144,11 @@ else
         });
         var rnums = Enumerable.Repeat(1, nameItems.Length).Select(_ => rnd1().Next());
 
-        return nameItems.Zip(rnums, (nm, nu) => (nm, nu)).OrderBy(s => s.nu).Select(s => s.nm).ToArray();
+        return nameItems
+            .Zip(rnums, (nm, nu) => (nm, nu))
+            .OrderBy(s => s.nu)
+            .Select(s => s.nm)
+            .ToArray();
     }
 
 }

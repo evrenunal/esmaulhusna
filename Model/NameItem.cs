@@ -13,4 +13,16 @@ namespace EsmaulHusna.Model
         public string explanation { get; set; }
     }
 
+    public class PageModel
+    {
+        public PageItem[] PageItems { get; set; }
+    }
+
+    public class PageItem
+    {
+        public NameItem NameItem { get; set; }
+        public bool Found { get; set; }
+        public int Index { get; set; }
+        public int TargetIndex { get; set; }
+    }
 }
