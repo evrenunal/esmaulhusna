@@ -24,51 +24,25 @@ else
                 {
                     if (!item.Found)
                     {
-                        <ul>
-                            <Draggable Data="@item" Zone="@item.Index.ToString()">
-                                <div class="draggable">
+                        <Draggable Data="@item" Zone="@item.Index.ToString()">
+                            <button type="button" class="btn btn-outline-primary btn-lg">@item.NameItem.original <br />  @item.NameItem.latin</button>
+                        </Draggable>
 
-                                    <h3>@item.NameItem.original</h3>  <br />  <h3>@item.NameItem.latin</h3>
-                                </div>
-                            </Draggable>
-                        </ul>
-                    }
-                    else
-                    {
-                        <div class="dragged">
-                            <h3>@item.NameItem.original</h3>  <br />  <h3>@item.NameItem.latin</h3>
-                        </div>
                     }
                 }
 
             </div>
-            <div class="mat-layout-grid-cell mat-layout-grid-cell-span-6">
+            <div class="mat-layout-grid-cell mat-layout-grid-cell-span-4">
                 <MatList SingleSelection="true" TwoLine="true">
                     @foreach (var item in pageModel.PageItems.OrderBy(p => p.Index))
                     {
                         <DropTarget T="PageItem" Zone="@item.Index.ToString()" Drop="@OnDrop">
-                            <div class="drop-target">
-
-                                @if (item.Found)
-                                {
                                     <MatListItem>
                                         <MatListItemText>
-                                            <MatListItemPrimaryText>@item.NameItem.original</MatListItemPrimaryText>
-                                            <MatListItemSecondaryText>@item.NameItem.meaning</MatListItemSecondaryText>
+                                            <MatListItemPrimaryText>@(item.Found ? item.NameItem.original : "??????????")</MatListItemPrimaryText>
+                                            <MatListItemSecondaryText>@(item.Found ? item.NameItem.latin : "??????????")</MatListItemSecondaryText>
                                         </MatListItemText>
                                     </MatListItem>
-                                }
-                                else
-                                {
-                                    <MatListItem>
-                                        <MatListItemText>
-                                            <MatListItemPrimaryText>???????????</MatListItemPrimaryText>
-                                            <MatListItemSecondaryText>???????????</MatListItemSecondaryText>
-                                        </MatListItemText>
-                                    </MatListItem>
-                                }
-
-                            </div>
                         </DropTarget>
                     }
                 </MatList>
