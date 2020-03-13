@@ -11,44 +11,53 @@
 
 @if (currentNames == null)
 {
-    <p><em>Loading...</em></p>
+<p><em>Loading...</em></p>
 }
 else
 {
 
-    <div class="mat-layout-grid">
-        <div class="mat-layout-grid-inner">
-            <div class="mat-layout-grid-cell mat-layout-grid-cell-span-6">
+<div class="container">
+    <div class="row">
+        <div class="col">
 
-                @foreach (var item in pageModel.PageItems.OrderBy(p => p.TargetIndex))
+            @foreach (var item in pageModel.PageItems.OrderBy(p => p.TargetIndex))
                 {
                     if (!item.Found)
                     {
-                        <Draggable Data="@item" Zone="@item.Index.ToString()">
-                            <button type="button" class="btn btn-outline-primary btn-lg">@item.NameItem.original <br />  @item.NameItem.latin</button>
-                        </Draggable>
-
+            <Draggable Data="@item" Zone="@item.Index.ToString()">
+                <button type="button" class="btn btn-outline-primary">@item.NameItem.original <br />  @item.NameItem.latin</button>
+            </Draggable>
                     }
                 }
 
-            </div>
-            <div class="mat-layout-grid-cell mat-layout-grid-cell-span-4">
-                <MatList SingleSelection="true" TwoLine="true">
-                    @foreach (var item in pageModel.PageItems.OrderBy(p => p.Index))
+        </div>
+        <div class="col">
+
+            @foreach (var item in pageModel.PageItems.OrderBy(p => p.Index))
                     {
-                        <DropTarget T="PageItem" Zone="@item.Index.ToString()" Drop="@OnDrop">
-                                    <MatListItem>
-                                        <MatListItemText>
-                                            <MatListItemPrimaryText>@(item.Found ? item.NameItem.original : "??????????")</MatListItemPrimaryText>
-                                            <MatListItemSecondaryText>@(item.Found ? item.NameItem.latin : "??????????")</MatListItemSecondaryText>
-                                        </MatListItemText>
-                                    </MatListItem>
-                        </DropTarget>
+            <DropTarget T="PageItem" Zone="@item.Index.ToString()" Drop="@OnDrop">
+                @if (item.Found)
+                    {
+                <a href="#" class="btn btn-outline-primary disabled" tabindex="-1" role="button" aria-disabled="true">@item.NameItem.original <br />  @item.NameItem.latin</a>
+
                     }
-                </MatList>
-            </div>
+                else
+                {
+            <button type="button" class="btn btn-outline-primary">"??????????"<br />"??????????"</button>
+                }
+
+                @*<MatListItem>
+            <MatListItemText>
+                <MatListItemPrimaryText>@(item.Found ? item.NameItem.original : "??????????")</MatListItemPrimaryText>
+                <MatListItemSecondaryText>@(item.Found ? item.NameItem.latin : "??????????")</MatListItemSecondaryText>
+            </MatListItemText>
+        </MatListItem>*@
+            </DropTarget>
+                    }
+
         </div>
     </div>
+</div>
 
 }
 
