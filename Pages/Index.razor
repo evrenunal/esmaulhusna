@@ -35,7 +35,7 @@ else
 
             @foreach (var item in pageModel.PageItems.OrderBy(p => p.Index))
                     {
-            <DropTarget T="PageItem" Zone="@item.Index.ToString()" Drop="@OnDrop">
+            <DropTarget T="PageItem" Zone="@item.Index.ToString()" Drop="OnDrop">
                 @if (item.Found)
                     {
                 <a href="#" class="btn btn-outline-primary disabled" tabindex="-1" role="button" aria-disabled="true">@item.NameItem.original <br />  @item.NameItem.latin</a>

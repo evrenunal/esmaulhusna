@@ -2,7 +2,7 @@
 @inject DragAndDropController DragAndDropController
 @typeparam T
 
-<div ondragover="event.preventDefault()" @ondrop="OnDrop">
+<div ondragover="event.preventDefault()" @ondrop="@OnDrop">
     @ChildContent
 </div>
 
