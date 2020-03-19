@@ -2,14 +2,21 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using CsvHelper.Configuration.Attributes;
 
 namespace EsmaulHusna.Model
 {
     public class NameItem
     {
+        [Name("Index")]
+        public string Index { get; set; }
+        [Name("Name")]
         public string original { get; set; }
+        [Name("Transliteration")]
         public string latin { get; set; }
+        [Name("Meaning")]
         public string meaning { get; set; }
+        [Name("Explanation")]
         public string explanation { get; set; }
     }
 
