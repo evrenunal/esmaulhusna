@@ -18,6 +18,18 @@ namespace EsmaulHusna.Model
         public PageItem[] PageItems { get; set; }
     }
 
+    public class ClickedItem
+    {
+        public int Index { get; set; }
+        public Side Side { get; set; }
+    }
+
+    public enum Side
+    {
+        Source,
+        Destination
+    }
+
     public class PageItem
     {
         public NameItem NameItem { get; set; }

@@ -11,53 +11,48 @@
 
 @if (currentNames == null)
 {
-<p><em>Loading...</em></p>
+    <p><em>Loading...</em></p>
 }
 else
 {
 
-<div class="container">
-    <div class="row">
-        <div class="col">
+    <div class="container">
+        <div class="row">
+            <div class="col">
 
-            @foreach (var item in pageModel.PageItems.OrderBy(p => p.TargetIndex))
+                @foreach (var item in pageModel.PageItems.OrderBy(p => p.TargetIndex))
                 {
                     if (!item.Found)
                     {
-            <Draggable Data="@item" Zone="@item.Index.ToString()">
-                <button type="button" class="btn btn-outline-primary">@item.NameItem.original <br />  @item.NameItem.latin</button>
-            </Draggable>
+                        <Draggable Data="@item" Zone="@item.Index.ToString()" >
+                            <button type="button" @onclick="(s)=>ItemClicked(item,Side.Source)" class="btn btn-outline-primary">
+                            @item.NameItem.original <br />  @item.NameItem.latin
+                            </button>
+                        </Draggable>
                     }
                 }
 
-        </div>
-        <div class="col">
+            </div>
+            <div class="col">
 
-            @foreach (var item in pageModel.PageItems.OrderBy(p => p.Index))
-                    {
-            <DropTarget T="PageItem" Zone="@item.Index.ToString()" Drop="OnDrop">
-                @if (item.Found)
-                    {
-                <a href="#" class="btn btn-outline-primary disabled" tabindex="-1" role="button" aria-disabled="true">@item.NameItem.original <br />  @item.NameItem.latin</a>
-
-                    }
-                else
+                @foreach (var item in pageModel.PageItems.OrderBy(p => p.Index))
                 {
-            <button type="button" class="btn btn-outline-primary">"??????????"<br />"??????????"</button>
+                    <DropTarget T="PageItem" Zone="@item.Index.ToString()" Drop="OnDrop">
+                        @if (item.Found)
+                        {
+                            <a href="#" class="btn btn-outline-primary disabled" tabindex="-1" role="button" aria-disabled="true">@item.NameItem.original <br />  @item.NameItem.latin</a>
+
+                        }
+                        else
+                        {
+                            <button type="button" @onclick="(s)=>ItemClicked(item,Side.Destination)" class="btn btn-outline-primary">"??????????"<br />"??????????"</button>
+                        }
+                    </DropTarget>
                 }
 
-                @*<MatListItem>
-            <MatListItemText>
-                <MatListItemPrimaryText>@(item.Found ? item.NameItem.original : "??????????")</MatListItemPrimaryText>
-                <MatListItemSecondaryText>@(item.Found ? item.NameItem.latin : "??????????")</MatListItemSecondaryText>
-            </MatListItemText>
-        </MatListItem>*@
-            </DropTarget>
-                    }
-
+            </div>
         </div>
     </div>
-</div>
 
 }
 
@@ -70,10 +65,32 @@ else
     private NameItem[] allItems;
     private NameItem[] currentNames;
     private PageModel pageModel;
+    private ClickedItem clickedItem;
+    private
 
+    void ItemClicked(PageItem pageItem, Side side)
+    {
+        if (clickedItem?.Index == pageItem.Index
+            && clickedItem?.Side != side)
+        {
+            pageItem.Found = true;
+            clickedItem = null;
+            StateHasChanged();
+        }
+        else
+        {
+            clickedItem = new ClickedItem
+            {
+                Index = pageItem.Index,
+                Side = side
+            };
+        }
+
+    }
     void OnDrop(PageItem data)
     {
         data.Found = true;
+        clickedItem = null;
 
         // Important: Invoke StateHasChanged() to update the page
         StateHasChanged();
