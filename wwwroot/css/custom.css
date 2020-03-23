@@ -6,6 +6,7 @@
     display: inline-block;
     cursor: move;
     transition: all .2s ease-in-out;
+    touch-action: none;
 }
 
 .dragged {
@@ -15,6 +16,7 @@
     padding: 1rem;
     display: inline-block;
     background-color: darkgray;
+    touch-action: none;
 }
 
 
@@ -37,7 +39,7 @@
 }
 
 .demo-mat-card {
-    max-width: 250px;
+    /*max-width: 250px;*/
 }
 
 .demo-mat-card-content {
@@ -60,7 +62,7 @@
     margin: 0;
     position: fixed;
     right: 0;
-    left: 250px;
+    left: 00px;
     bottom: 0;
 }
 
