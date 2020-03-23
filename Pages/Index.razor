@@ -1,11 +1,13 @@
 ﻿@page "/"
+@inject Toolbelt.Blazor.I18nText.I18nText I18nText
 @using System.Globalization
 @using System.IO
 @using CsvHelper
+@using EsmaulHusna.I18nText
 @using EsmaulHusna.Model
 @inject HttpClient Http
 
-<h1>Esmaul Husna Memorization Application</h1>
+<h1>@Text.Header</h1>
 
 <div>
     <MatPaginator Length="@itemCount" PageSize="@pageSize" Page="@OnPage"></MatPaginator>
@@ -27,9 +29,9 @@ else
                 {
                     if (!item.Found)
                     {
-                        <Draggable Data="@item" Zone="@item.Index.ToString()" >
+                        <Draggable Data="@item" Zone="@item.Index.ToString()">
                             <button type="button" @onclick="(s)=>ItemClicked(item,Side.Source)" class="btn btn-outline-primary">
-                            @item.NameItem.original <br />  @item.NameItem.latin
+                                @item.NameItem.original <br />  @item.NameItem.latin
                             </button>
                         </Draggable>
                     }
@@ -62,7 +64,7 @@ else
 
 @code
 {
-
+    private Text Text = new Text();
     int itemCount = 0;
     int pageSize = 10;
     private NameItem[] allItems;
@@ -108,8 +110,9 @@ else
 
     protected override async Task OnInitializedAsync()
     {
-      //  allItems = await Http.GetJsonAsync<NameItem[]>("data/esmaulhusna-en.json");
-       var csvtring=await Http.GetStreamAsync("data/esmaulhusna-en.csv");
+        Text = await I18nText.GetTextTableAsync<Text>(this);
+        //  allItems = await Http.GetJsonAsync<NameItem[]>("data/esmaulhusna-en.json");
+        var csvtring = await Http.GetStreamAsync("data/"+Text.FileName);
 
         using (var reader = new StreamReader(csvtring))
         {
