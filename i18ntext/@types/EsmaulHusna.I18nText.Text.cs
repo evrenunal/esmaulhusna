@@ -19,7 +19,7 @@ namespace EsmaulHusna.I18nText
         /// <summary>"(Sahih Bukhari 50:894)"</summary>
         public string HadisSrc;
 
-        /// <summary>"Esmaul Husna Memorization Application"</summary>
+        /// <summary>"99 Names of Allah (Al Asma Ul Husna) Memorization Application"</summary>
         public string Header;
     }
 }

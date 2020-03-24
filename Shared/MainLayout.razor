@@ -7,8 +7,8 @@
 
 <div class="main">
     @*<div class="top-row px-4">
-        <a href="http://blazor.net" target="_blank" class="ml-md-auto">About</a>
-    </div>*@
+            <a href="http://blazor.net" target="_blank" class="ml-md-auto">About</a>
+        </div>*@
 
     <div class="content">
         @Body
@@ -20,12 +20,12 @@
                 </div>
                 <div class="col-auto">
                     <select class="form-control form-control-sm" @onchange="OnChangeCurrentLang">
-                                <option value="tr" selected="@(CurrentLang == "tr")">Türkçe</option>
-                                <option value="en" selected="@(CurrentLang == "en")">English</option>
+                        <option value="tr" selected="@(CurrentLang == "tr")">Türkçe</option>
+                        <option value="en" selected="@(CurrentLang == "en")">English</option>
                     </select>
-                            </div>
-                            </div>
-                            </div>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
 
@@ -45,8 +45,9 @@
         }
         else
         {
-            CurrentLang = "tr";
+            CurrentLang = "en";
         }
+        await I18nText.SetCurrentLanguageAsync(CurrentLang);
 
         Text = await I18nText.GetTextTableAsync<Text>(this);
     }
