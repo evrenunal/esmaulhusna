@@ -58,7 +58,8 @@
     private async Task OnChangeCurrentLang(ChangeEventArgs args)
     {
         Console.WriteLine($"OnChange: {args.Value}");
-        CurrentLang = args.Value as string;
         await I18nText.SetCurrentLanguageAsync(CurrentLang);
+        CurrentLang = args.Value as string;
+
     }
 }

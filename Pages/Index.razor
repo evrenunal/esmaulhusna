@@ -8,7 +8,8 @@
 @inject HttpClient Http
 @inject Toolbelt.Blazor.I18nText.I18nText I18nText
 
-<h1>@Text.Header</h1>
+<title>@Text.SiteName</title>
+<h8>@Text.Header</h8>
 
 <div>
     <MatPaginator Length="@itemCount" PageSize="@pageSize" Page="@OnPage"></MatPaginator>
@@ -96,7 +97,9 @@ else
 
     protected async Task ReadFile()
     {
-        var csvtring = await Http.GetStreamAsync("data/" + Text.FileName);
+        var csvtring = await Http.GetStreamAsync("data/" + $"esmaulhusna-{CurrentLang}.csv");
+        Console.WriteLine("CurrentLang---" + CurrentLang);
+
 
         using (var reader = new StreamReader(csvtring))
         {
@@ -110,21 +113,18 @@ else
 
     }
 
-        public override Task SetParametersAsync(ParameterView parameters)
-        {
-            return base.SetParametersAsync(parameters);
-        }
+  
 
-        //protected async override Task OnParametersSetAsync()
-        //{
-        //    if (CurrentLang == oldlang) return;
-        //    Console.WriteLine("CurrentLang" + CurrentLang);
-        //    await ReadFile();
-        //    CreatePageItems();
-        //    oldlang = CurrentLang;
-        //}
+    protected async override Task OnParametersSetAsync()
+    {
+        if (CurrentLang == oldlang) return;
+        Console.WriteLine("CurrentLang---" + CurrentLang);
+        await ReadFile();
+        CreatePageItems();
+        oldlang = CurrentLang;
+    }
 
-        private void ItemClicked(PageItem pageItem, Side side)
+    private void ItemClicked(PageItem pageItem, Side side)
     {
         if (clickedItem?.Index == pageItem.Index
             && clickedItem?.Side != side)
