@@ -1,5 +1,7 @@
-﻿<div class="top-row pl-4 navbar navbar-dark">
-    <a class="navbar-brand" href="">EsmaulHusna</a>
+﻿@inject Toolbelt.Blazor.I18nText.I18nText I18nText
+
+<div class="top-row pl-4 navbar navbar-dark">
+    <a class="navbar-brand" href="">@Text.SiteName</a>
     <button class="navbar-toggler" @onclick="ToggleNavMenu">
         <span class="navbar-toggler-icon"></span>
     </button>
@@ -29,6 +31,13 @@
     private bool collapseNavMenu = true;
 
     private string NavMenuCssClass => collapseNavMenu ? "collapse" : null;
+
+    public I18nText.Text Text = new I18nText.Text();
+
+    protected async override Task OnInitializedAsync()
+    {
+        Text = await I18nText.GetTextTableAsync<I18nText.Text>(this);
+    }
 
     private void ToggleNavMenu()
     {

@@ -6,25 +6,16 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="CsvHelper" Version="15.0.1" />
+    <PackageReference Include="CsvHelper" Version="15.0.3" />
     <PackageReference Include="MatBlazor" Version="2.2.0" />
-    <PackageReference Include="Microsoft.AspNetCore.Blazor" Version="3.1.0-preview4.19579.2" />
-    <PackageReference Include="Microsoft.AspNetCore.Blazor.Build" Version="3.1.0-preview4.19579.2" PrivateAssets="all" />
-    <PackageReference Include="Microsoft.AspNetCore.Blazor.HttpClient" Version="3.1.0-preview4.19579.2" />
-    <PackageReference Include="Microsoft.AspNetCore.Blazor.DevServer" Version="3.1.0-preview4.19579.2" PrivateAssets="all" />
-    <PackageReference Include="Toolbelt.Blazor.I18nText" Version="7.1.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="3.2.0-preview2.20160.5" />
+    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.Build" Version="3.2.0-preview2.20160.5" PrivateAssets="all" />
+    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.DevServer" Version="3.2.0-preview2.20160.5" PrivateAssets="all" />
+    <PackageReference Include="Microsoft.AspNetCore.Blazor.HttpClient" Version="3.2.0-preview2.20160.5" />
+    <PackageReference Include="Toolbelt.Blazor.I18nText" Version="9.0.0.3" />
   </ItemGroup>
 
   <ItemGroup>
-    <Watch Remove="i18ntext\Text.en.json" />
+    <Folder Include="i18ntext\" />
   </ItemGroup>
-
-  <ItemGroup>
-    <Content Remove="i18ntext\Text.en.json" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Watch Remove="i18ntext\Text.tr.json" />
-  </ItemGroup>
-
 </Project>

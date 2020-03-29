@@ -21,5 +21,8 @@ namespace EsmaulHusna.I18nText
 
         /// <summary>"99 Names of Allah (Al Asma Ul Husna) Memorization Application"</summary>
         public string Header;
+
+        /// <summary>"99 Names of Allah"</summary>
+        public string SiteName;
     }
 }

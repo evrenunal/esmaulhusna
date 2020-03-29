@@ -1,27 +1,33 @@
-﻿@using EsmaulHusna.I18nText
-@inherits LayoutComponentBase
+﻿@inherits LayoutComponentBase
 @inject Toolbelt.Blazor.I18nText.I18nText I18nText
-@*<div class="sidebar">
-        <NavMenu />
-    </div>*@
+
+
+
+<div class="sidebar">
+    <NavMenu />
+</div>
+
 
 <div class="main">
-    @*<div class="top-row px-4">
-            <a href="http://blazor.net" target="_blank" class="ml-md-auto">About</a>
-        </div>*@
+    <div class="top-row px-4">
+        <a href="http://blazor.net" target="_blank" class="ml-md-auto">@Text.About</a>
+    </div>
 
-    <div class="content">
-        @Body
+    <div class="content px-4">
+        <CascadingValue Value="CurrentLang">
+            @Body
+        </CascadingValue>
+       
         <div class="footer">
-            <div class="form-row align-items-center text-muted">
+            <div class="form-row align-items-center text-muted px-4">
                 <div class="col"></div>
                 <div class="col-auto">
                     <span class="oi oi-globe" aria-hidden="true"></span>
                 </div>
                 <div class="col-auto">
                     <select class="form-control form-control-sm" @onchange="OnChangeCurrentLang">
-                        <option value="tr" selected="@(CurrentLang == "tr")">Türkçe</option>
                         <option value="en" selected="@(CurrentLang == "en")">English</option>
+                        <option value="tr" selected="@(CurrentLang == "tr")">Türkçe</option>
                     </select>
                 </div>
             </div>
@@ -30,16 +36,15 @@
 </div>
 
 
-@code {
+@code{
 
     private string CurrentLang;
+    public I18nText.Text Text = new I18nText.Text();
 
-    private Text Text = new Text();
-
-    protected override async Task OnInitializedAsync()
+    protected async override Task OnInitializedAsync()
     {
-        var lang = await I18nText.GetCurrentLanguageAsync();
-        if (new[] { "en", "tr" }.Contains(lang.Split('-')[0]))
+        var lang = (await I18nText.GetCurrentLanguageAsync()).Split('-')[0];
+        if (new[] { "en", "tr" }.Contains(lang))
         {
             CurrentLang = lang;
         }
@@ -47,9 +52,7 @@
         {
             CurrentLang = "en";
         }
-        await I18nText.SetCurrentLanguageAsync(CurrentLang);
-
-        Text = await I18nText.GetTextTableAsync<Text>(this);
+        Text = await I18nText.GetTextTableAsync<I18nText.Text>(this);
     }
 
     private async Task OnChangeCurrentLang(ChangeEventArgs args)
@@ -59,4 +62,3 @@
         await I18nText.SetCurrentLanguageAsync(CurrentLang);
     }
 }
-

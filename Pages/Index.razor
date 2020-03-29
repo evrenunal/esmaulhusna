@@ -1,18 +1,18 @@
 ﻿@page "/"
-@inject Toolbelt.Blazor.I18nText.I18nText I18nText
-@using System.Globalization
+
 @using System.IO
+@using System.Globalization
 @using CsvHelper
 @using EsmaulHusna.I18nText
 @using EsmaulHusna.Model
 @inject HttpClient Http
+@inject Toolbelt.Blazor.I18nText.I18nText I18nText
 
 <h1>@Text.Header</h1>
 
 <div>
     <MatPaginator Length="@itemCount" PageSize="@pageSize" Page="@OnPage"></MatPaginator>
 </div>
-
 
 @if (currentNames == null)
 {
@@ -61,19 +61,70 @@ else
 
 }
 
-
-@code
-{
-    private Text Text = new Text();
+@code{
+    public I18nText.Text Text = new I18nText.Text();
+    [CascadingParameter] string CurrentLang { get; set; }
     int itemCount = 0;
     int pageSize = 5;
     private NameItem[] allItems;
     private NameItem[] currentNames;
     private PageModel pageModel;
     private ClickedItem clickedItem;
-    private
+    public string oldlang;
 
-    void ItemClicked(PageItem pageItem, Side side)
+    protected async override Task OnInitializedAsync()
+    {
+        Text = await I18nText.GetTextTableAsync<I18nText.Text>(this);
+        //var csvtring = await Http.GetStreamAsync("data/" + Text.FileName);
+
+        //using (var reader = new StreamReader(csvtring))
+        //{
+        //    using var csv = new CsvReader(reader, CultureInfo.InvariantCulture);
+        //    csv.Configuration.HasHeaderRecord = true;
+        //    csv.Configuration.Delimiter = "|";
+        //    allItems = csv.GetRecords<NameItem>().ToArray();
+        //}
+        //itemCount = allItems.Length;
+        //currentNames = allItems.Take(pageSize).ToArray();
+
+        await ReadFile();
+
+        CreatePageItems();
+        oldlang = CurrentLang;
+
+    }
+
+    protected async Task ReadFile()
+    {
+        var csvtring = await Http.GetStreamAsync("data/" + Text.FileName);
+
+        using (var reader = new StreamReader(csvtring))
+        {
+            using var csv = new CsvReader(reader, CultureInfo.InvariantCulture);
+            csv.Configuration.HasHeaderRecord = true;
+            csv.Configuration.Delimiter = "|";
+            allItems = csv.GetRecords<NameItem>().ToArray();
+        }
+        itemCount = allItems.Length;
+        currentNames = allItems.Take(pageSize).ToArray();
+
+    }
+
+        public override Task SetParametersAsync(ParameterView parameters)
+        {
+            return base.SetParametersAsync(parameters);
+        }
+
+        //protected async override Task OnParametersSetAsync()
+        //{
+        //    if (CurrentLang == oldlang) return;
+        //    Console.WriteLine("CurrentLang" + CurrentLang);
+        //    await ReadFile();
+        //    CreatePageItems();
+        //    oldlang = CurrentLang;
+        //}
+
+        private void ItemClicked(PageItem pageItem, Side side)
     {
         if (clickedItem?.Index == pageItem.Index
             && clickedItem?.Side != side)
@@ -108,27 +159,10 @@ else
     }
 
 
-    protected override async Task OnInitializedAsync()
-    {
-        Text = await I18nText.GetTextTableAsync<Text>(this);
-        //  allItems = await Http.GetJsonAsync<NameItem[]>("data/esmaulhusna-en.json");
-        var csvtring = await Http.GetStreamAsync("data/"+Text.FileName);
-
-        using (var reader = new StreamReader(csvtring))
-        {
-            using var csv = new CsvReader(reader, CultureInfo.InvariantCulture);
-            csv.Configuration.HasHeaderRecord = true;
-            csv.Configuration.Delimiter = "|";
-            allItems = csv.GetRecords<NameItem>().ToArray();
-        }
-        itemCount = allItems.Length;
-        currentNames = allItems.Take(pageSize).ToArray();
-
-        CreatePageItems();
-    }
 
     private void CreatePageItems()
     {
+        Console.WriteLine("currentNames.Length: " + currentNames.Length);
         int[] randoms = GetRandoms(currentNames.Length);
         PageItem[] pageItem1 = currentNames.Select((cn, i) => new PageItem
         {
@@ -174,5 +208,5 @@ else
             .ToArray();
     }
 
+
 }
-@*<SurveyPrompt Title="How is Blazor working for you?" />*@
