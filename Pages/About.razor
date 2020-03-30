@@ -1,16 +1,28 @@
 ﻿@page "/about"
+@inject Toolbelt.Blazor.I18nText.I18nText I18nText
 
-<h1>Counter</h1>
+<h1>@Text.About</h1>
 
-<p>Current count: @currentCount</p>
+<p>@Text.Hadis</p>
+<p>@Text.HadisSrc</p><br /><br />
 
-<button class="btn btn-primary" @onclick="IncrementCount">Click me</button>
+<p>E-mail:</p>
+<p>evren07unal@gmail.com</p>
+
+<p>Sources:</p>
+<a href="https://99namesofallah.name/" target="_blank" class="ml-md-auto">99namesofallah.name</a><br />
+<a href="https://allahin99ismi.com/" target="_blank" class="ml-md-auto">allahin99ismi.com</a>
+
 
 @code {
-    private int currentCount = 0;
 
-    private void IncrementCount()
+
+    public I18nText.Text Text = new I18nText.Text();
+
+    protected async override Task OnInitializedAsync()
     {
-        currentCount++;
+        Text = await I18nText.GetTextTableAsync<I18nText.Text>(this);
     }
+
+
 }
