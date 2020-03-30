@@ -9,8 +9,10 @@
 
 
 <div class="main">
-    <div class="top-row px-4">
-        <a href="http://blazor.net" target="_blank" class="ml-md-auto">@Text.About</a>
+    <div class="top-row px-4">       
+        <NavLink class="nav-link" href="about" Match="NavLinkMatch.All">
+            <span class="oi oi-home" aria-hidden="true"></span> @Text.About
+        </NavLink>
     </div>
 
     <div class="content px-4">
@@ -58,8 +60,11 @@
     private async Task OnChangeCurrentLang(ChangeEventArgs args)
     {
         Console.WriteLine($"OnChange: {args.Value}");
-        await I18nText.SetCurrentLanguageAsync(CurrentLang);
+
+        await I18nText.SetCurrentLanguageAsync(args.Value as string);
+
         CurrentLang = args.Value as string;
+
 
     }
 }

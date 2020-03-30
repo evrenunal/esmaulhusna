@@ -76,17 +76,6 @@ else
     protected async override Task OnInitializedAsync()
     {
         Text = await I18nText.GetTextTableAsync<I18nText.Text>(this);
-        //var csvtring = await Http.GetStreamAsync("data/" + Text.FileName);
-
-        //using (var reader = new StreamReader(csvtring))
-        //{
-        //    using var csv = new CsvReader(reader, CultureInfo.InvariantCulture);
-        //    csv.Configuration.HasHeaderRecord = true;
-        //    csv.Configuration.Delimiter = "|";
-        //    allItems = csv.GetRecords<NameItem>().ToArray();
-        //}
-        //itemCount = allItems.Length;
-        //currentNames = allItems.Take(pageSize).ToArray();
 
         await ReadFile();
 
@@ -97,9 +86,9 @@ else
 
     protected async Task ReadFile()
     {
+        //  var lang = await I18nText.GetCurrentLanguageAsync();
         var csvtring = await Http.GetStreamAsync("data/" + $"esmaulhusna-{CurrentLang}.csv");
-        Console.WriteLine("CurrentLang---" + CurrentLang);
-
+        
 
         using (var reader = new StreamReader(csvtring))
         {
@@ -113,15 +102,16 @@ else
 
     }
 
-  
+
 
     protected async override Task OnParametersSetAsync()
     {
-        if (CurrentLang == oldlang) return;
+        //if (CurrentLang == oldlang) return;
         Console.WriteLine("CurrentLang---" + CurrentLang);
         await ReadFile();
         CreatePageItems();
-        oldlang = CurrentLang;
+        //oldlang = CurrentLang;
+       // StateHasChanged();
     }
 
     private void ItemClicked(PageItem pageItem, Side side)
