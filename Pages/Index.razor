@@ -10,9 +10,27 @@
 
 <title>@Text.SiteName</title>
 <h8>@Text.Header</h8>
+<style>
+    .mdc-select__selected-text {
+        min-width:10px;
 
+    }
+    .mdc-select__selected-text {
+        line-height: 1rem;
+       
+        padding:10px
+    }
+
+    .mdc-select__anchor, mdc-ripple-upgraded{
+        height:40px;
+    }
+
+    .mdc-select__dropdown-icon{
+        bottom:2px;
+    }
+</style>
 <div>
-    <MatPaginator Length="@itemCount" PageSize="@pageSize" Page="@OnPage"></MatPaginator>
+    <MatPaginator Style="" PageLabel="" Label="" Length="@itemCount" PageSize="@pageSize" Page="@OnPage"></MatPaginator>
 </div>
 
 @if (currentNames == null)
@@ -88,7 +106,7 @@ else
     {
         //  var lang = await I18nText.GetCurrentLanguageAsync();
         var csvtring = await Http.GetStreamAsync("data/" + $"esmaulhusna-{CurrentLang}.csv");
-        
+
 
         using (var reader = new StreamReader(csvtring))
         {
@@ -111,7 +129,7 @@ else
         await ReadFile();
         CreatePageItems();
         //oldlang = CurrentLang;
-       // StateHasChanged();
+        // StateHasChanged();
     }
 
     private void ItemClicked(PageItem pageItem, Side side)
