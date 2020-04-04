@@ -8,8 +8,7 @@
 @inject HttpClient Http
 @inject Toolbelt.Blazor.I18nText.I18nText I18nText
 
-<title>@Text.SiteName</title>
-<h8>@Text.Header</h8>
+
 <style>
     .mdc-select__selected-text {
         min-width:10px;
@@ -49,7 +48,7 @@ else
                     if (!item.Found)
                     {
                         <Draggable Data="@item" Zone="@item.Index.ToString()">
-                            <button type="button" @onclick="(s)=>ItemClicked(item,Side.Source)" class="btn btn-outline-primary">
+                            <button type="button" @onclick="(s)=>ItemClicked(item,Side.Source)" class="btn btn-outline-primary" style="min-width:150px">
                                 @item.NameItem.original <br />  @item.NameItem.latin
                             </button>
                         </Draggable>
@@ -69,7 +68,7 @@ else
                         }
                         else
                         {
-                            <button type="button" @onclick="(s)=>ItemClicked(item,Side.Destination)" class="btn btn-outline-primary">"??????????"<br />"??????????"</button>
+                            <button type="button" @onclick="(s)=>ItemClicked(item,Side.Destination)" class="btn btn-outline-primary" style="font-size:xx-large;padding-left:40px;padding-right:40px">?</button>
                         }
                     </DropTarget>
                 }
