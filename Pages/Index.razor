@@ -11,26 +11,38 @@
 
 <style>
     .mdc-select__selected-text {
-        min-width:10px;
-
+        min-width: 10px;
     }
+
     .mdc-select__selected-text {
         line-height: 1rem;
-       
-        padding:10px
+        padding: 10px
     }
 
-    .mdc-select__anchor, mdc-ripple-upgraded{
-        height:40px;
+    .mdc-select__anchor, mdc-ripple-upgraded {
+        height: 40px;
     }
 
-    .mdc-select__dropdown-icon{
-        bottom:2px;
+    .mdc-select__dropdown-icon {
+        bottom: 2px;
+    }
+
+    .mdc-icon-button {
+        width: 36px;
     }
 </style>
-<div>
-    <MatPaginator Style="" PageLabel="" Label="" Length="@itemCount" PageSize="@pageSize" Page="@OnPage"></MatPaginator>
+
+<div class="form-row  align-items-center text-muted px-4" style="flex-wrap:nowrap">   
+
+    <div class="col-auto">
+        <button type="button" class="btn btn-light" @onclick="Refresh"><span class="oi oi-reload"></span></button>
+    </div>
+    <div class="col-auto">
+        <MatPaginator Style="" PageLabel="" Label="" Length="@itemCount" PageSize="@pageSize" Page="@OnPage"></MatPaginator>
+    </div>
 </div>
+
+
 
 @if (currentNames == null)
 {
@@ -48,7 +60,7 @@ else
                     if (!item.Found)
                     {
                         <Draggable Data="@item" Zone="@item.Index.ToString()">
-                            <button type="button" @onclick="(s)=>ItemClicked(item,Side.Source)" class="btn btn-outline-primary align-items-lg-center w-100" >
+                            <button type="button" @onclick="(s)=>ItemClicked(item,Side.Source)" class="btn btn-outline-primary align-items-lg-center w-100">
                                 @item.NameItem.original <br />  @item.NameItem.latin
                             </button>
                         </Draggable>
@@ -84,6 +96,7 @@ else
     [CascadingParameter] string CurrentLang { get; set; }
     int itemCount = 0;
     int pageSize = 5;
+    int pageIndex = 0;
     private NameItem[] allItems;
     private NameItem[] currentNames;
     private PageModel pageModel;
@@ -99,6 +112,16 @@ else
         CreatePageItems();
         oldlang = CurrentLang;
 
+    }
+
+    public void Refresh()
+    {
+        OnPage(new MatPaginatorPageEvent
+        {
+            Length = pageSize,
+            PageIndex = pageIndex,
+            PageSize = pageSize
+        });
     }
 
     protected async Task ReadFile()
@@ -160,6 +183,7 @@ else
     }
     void OnPage(MatPaginatorPageEvent e)
     {
+        pageIndex = e.PageIndex;
         pageSize = e.PageSize;
         currentNames = allItems.Skip(e.PageIndex * e.PageSize).Take(e.PageSize).ToArray();
         CreatePageItems();
